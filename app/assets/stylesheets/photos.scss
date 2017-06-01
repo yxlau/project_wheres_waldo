@@ -1,0 +1,51 @@
+// Place all the styles related to the photos controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+#tagger, .tagged {
+  border: 2px solid #fff;
+  position: relative;
+
+  .namelist {
+  list-style-type: none;
+  color: black;
+  background: #fff;
+  margin: 0;
+  padding:0;
+  }
+
+  .namelist li:hover {
+    background: #ccc;
+    cursor: pointer;
+  }
+
+  .tag-frame {
+    border-bottom: 2px solid #fff;
+    width: 50px;
+    height: 50px;
+  }
+  .tag-name {
+    background: #fff;
+  }
+
+  .tag-close {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: white;
+    font-size: 12px;
+    text-align: center;
+    padding: 5px;
+  }
+  .tag-close:hover {
+    cursoer: pointer;
+  }
+}
+
+.tagged {
+  position:absolute;
+}
+
+img[data-taggable=true]:hover {
+  cursor: crosshair;
+}
