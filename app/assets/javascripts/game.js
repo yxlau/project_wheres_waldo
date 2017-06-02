@@ -12,7 +12,6 @@ WALDO.Game = (function() {
   var _clearTags;
 
   var init = function(callbacks) {
-    console.log('Game init');
     _checkGameOver = callbacks.checkGameOver;
     _saveNewHighScore = callbacks.saveNewHighScore;
     _clearTags = callbacks.clearTags;

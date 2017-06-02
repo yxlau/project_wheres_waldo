@@ -12,6 +12,9 @@
 
 ActiveRecord::Schema.define(version: 20170602030151) do
 
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "characters", force: :cascade do |t|
     t.string   "name"
     t.datetime "created_at", null: false
@@ -31,7 +34,8 @@ ActiveRecord::Schema.define(version: 20170602030151) do
     t.integer  "character_id"
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
-    t.index ["character_id"], name: "index_tags_on_character_id"
+    t.index ["character_id"], name: "index_tags_on_character_id", using: :btree
   end
 
+  add_foreign_key "tags", "characters"
 end

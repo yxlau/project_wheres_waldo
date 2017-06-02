@@ -18,7 +18,6 @@ WALDO.Main = (function(Game) {
     _imgHeight = $('.waldo').height();
     _imgOffset = $('.waldo').offset();
 
-
     _setContainerWidth();
     _getNames();
     _setUpExistingTags();
@@ -68,7 +67,6 @@ WALDO.Main = (function(Game) {
 
       _setUpListeners();
 
-
     });
   }
 
@@ -77,7 +75,6 @@ WALDO.Main = (function(Game) {
   }
 
   var _saveNewHighScore = function(time) {
-    console.log('new high')
     var name = prompt('Wow. New high score! Congrats. Pease enter you name');
     $.ajax({
       url: '/games',
