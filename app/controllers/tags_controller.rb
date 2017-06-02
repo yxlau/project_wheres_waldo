@@ -5,7 +5,7 @@ class TagsController < ApplicationController
 
     respond_to do |f|
       f.html
-      f.json { render json: @tags.as_json(include: { character: {only: :name}}), status: :ok}
+      f.json { render json: @tags.as_json(include: {character: {only: :name} } ), status: :ok}
     end
   end
 
@@ -25,8 +25,6 @@ class TagsController < ApplicationController
   end
 
   def destroy
-    p '*' * 20
-    p params
     @tag = Tag.find(params[:id])
 
     if @tag.destroy

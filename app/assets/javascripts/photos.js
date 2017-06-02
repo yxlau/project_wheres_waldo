@@ -36,6 +36,7 @@ WALDO.Main = (function() {
       _tags = data;
     }).done(function(data) {
 
+
       $.each(data, function(i, tag) {
         var $tag = $('<div>').addClass('tagged')
           .css({
@@ -44,9 +45,7 @@ WALDO.Main = (function() {
             top: tag.y,
           })
           .html(
-            '<div class="tag-frame"></div>' +
-            '<div class="tag-name">' + tag.character.name + '</div>' +
-            '<div class="tag-close" data-tag-id="' + tag.id + '" data-tag-name="' + tag.character.name + '"> X </div>'
+            _createCloseButton(tag.id, tag.character.name, tag.character_id)
           )
           .hide();
         $('#img').append($tag);
@@ -73,10 +72,10 @@ WALDO.Main = (function() {
 
   var _listenForPhotoHover = function() {
     $('#img').on('mouseenter', function() {
-      $(this).children('.tagged').fadeIn();
+      _$tags.fadeIn();
     });
     $('#img').on('mouseleave', function() {
-      $(this).children('.tagged').fadeOut();
+      _$tags.fadeOut();
     })
 
   }
@@ -86,7 +85,6 @@ WALDO.Main = (function() {
     e.stopImmediatePropagation();
 
     _$tags.fadeToggle()
-
 
   }
 
@@ -127,13 +125,17 @@ WALDO.Main = (function() {
     });
   }
 
-  var _dropTag = function(name) {
+  var _dropTag = function(tag_id, name, char_id) {
     _$tagger.html(
-      '<div class="tag-frame"></div>' +
-      '<div class="tag-name">' + name + '</div>' +
-      '<div class="tag-close">X</div>'
+      _createCloseButton(tag_id, name, char_id)
     );
     _$tagger.attr('id', null).addClass('tagged');
+  }
+
+  var _createCloseButton = function(tag_id, name, char_id) {
+    return '<div class="tag-frame"></div>' +
+      '<div class="tag-name">' + name + '</div>' +
+      '<div class="tag-close" data-tag-id="' + tag_id + '" data-tag-name="' + name + '" data-char-id="' + char_id + '"> X </div>';
   }
 
   var _createTagRecord = function($that) {
@@ -151,16 +153,17 @@ WALDO.Main = (function() {
       dataType: 'json',
       data: tagData,
       success: function(data) {
-        console.log('success');
-        _dropTag($that.text());
+        console.log('Tag created');
+        _dropTag(data.id, $that.text(), $that.data('char-id'));
         _removeNameFromNameList($that.data('char-id'), $that.text());
         _listenForTagRemoval();
+        _setUpListeners();
         _createTagger();
         _taggerVisible = false;
 
       },
       error: function(jqxhr, status, error) {
-        console.log('error');
+        console.log('Could not create tag');
         console.log(jqxhr, status, error)
       }
     })
@@ -168,40 +171,32 @@ WALDO.Main = (function() {
   }
 
   var _listenForTagRemoval = function() {
-    // make this use IDs later on
-    // traversing the DOM is not good
     $('.tag-close').on('click', function(e) {
       e.stopImmediatePropagation();
-      var id = $(this).data('tag-id');
-      var name = $(this).data('tag-name');
-      _destroyTagRecord(id, name);
-      $(this).parent().remove();
+      _destroyTagRecord($(this));
     })
   }
 
-  var _destroyTagRecord = function(id, name) {
+  var _destroyTagRecord = function($this) {
 
     $.ajax({
-      url: '/tags/' + id,
+      url: '/tags/' + $this.data('tag-id'),
       type: 'DELETE',
       dataType: 'json',
-      success: function() {
+      success: function(data) {
         console.log('Tag destroyed');
-        _addNameToNameList(id, name);
+        _addNameToNameList($this.data('char-id'), $this.data('tag-name'));
+        $this.parent().remove();
       },
       error: function(jqxhr, status, error) {
-        console.log(error);
         console.log('Could not destroy tag')
       }
     })
-
   }
 
   var _addNameToNameList = function(id, name) {
     _characterList[id] = name;
     _refreshTaggerNames();
-    console.log(_characterList);
-
   }
 
   var _refreshTaggerNames = function() {
@@ -213,7 +208,6 @@ WALDO.Main = (function() {
   }
 
   var _removeNameFromNameList = function(id, name) {
-    console.log('character list', _characterList);
     delete _characterList[id];
   }
 
