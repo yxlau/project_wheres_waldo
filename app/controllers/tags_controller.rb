@@ -25,9 +25,8 @@ class TagsController < ApplicationController
   end
 
   def destroy
-    @tag = Tag.find(params[:id])
 
-    if @tag.destroy
+    if Tag.destroy(params[:tag_ids] || params[:id])
       respond_to do |f|
         f.html
         f.json { render json: {message: 'Destroyed'}, status: :ok}
@@ -42,6 +41,7 @@ class TagsController < ApplicationController
   end
 
   private
+
 
   def tag_params
     params.require(:tag).permit(:x, :y, :character_id)

@@ -4,6 +4,7 @@
 
 h1 {
   text-align: center;
+  clear:both;
 }
 
 #tagger, .tagged {
@@ -53,3 +54,26 @@ h1 {
 img[data-taggable=true]:hover {
   cursor: crosshair;
 }
+
+#img {
+  margin: 0 auto;
+}
+
+#scores{
+  position:absolute;
+  right:0;
+  top:0;
+  li {
+   float:left;
+   padding-right:1em;
+   margin-right:1em;
+  }
+}
+.score-board {
+  float: right;
+  clear: left
+}
+#current-player {
+  font-weight:bold;
+}
+

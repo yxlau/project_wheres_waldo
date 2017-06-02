@@ -7,9 +7,13 @@
 #   Character.create(name: 'Luke', movie: movies.first)
 
 Character.destroy_all
+Game.destroy_all
+Tag.destroy_all
 
 characters = %w(Waldo Wenda Odlaw Wizard\ Whitebeard Woof)
 
 characters.each do |c|
   Character.create!(name: c);
 end
+
+Game.create!(name: 'Person', time: 123);
