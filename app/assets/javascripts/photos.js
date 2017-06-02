@@ -197,6 +197,7 @@ WALDO.Main = (function(Game) {
 
   var _listenForNameSelection = function() {
     $('#tagger').on('click', 'li', function(e) {
+      e.stopImmediatePropagation();
       var $this = $(this);
       _createTagRecord($this);
     });
