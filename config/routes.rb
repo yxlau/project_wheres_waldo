@@ -5,4 +5,5 @@ Rails.application.routes.draw do
 
   resources :tags, only: [:index, :create, :destroy]
   resources :characters, only: [:index]
+  resources :games, only: [:index, :create]
 end

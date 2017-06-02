@@ -7,11 +7,16 @@ WALDO.Main = (function() {
   var _characterList;
   var _taggerVisible;
   var _hoveringOnTag;
+  var _imgWidth;
+  var _imgHeight;
 
   var init = function() {
     _hoveringOnTag = false;
     _taggerVisible = false;
     _characterList = {};
+    _imgWidth = $('.waldo').width();
+    _imgHeight = $('.waldo').height();
+    _imgOffset = $('.waldo').offset();
 
     _setContainerWidth();
     _getNames();
@@ -28,7 +33,7 @@ WALDO.Main = (function() {
 
 
   var _setContainerWidth = function() {
-    $('#img').width($('#img').children('img').width());
+    $('#img').width($('.waldo').width());
   }
 
   var _setUpExistingTags = function() {
@@ -36,13 +41,12 @@ WALDO.Main = (function() {
       _tags = data;
     }).done(function(data) {
 
-
       $.each(data, function(i, tag) {
         var $tag = $('<div>').addClass('tagged')
           .css({
             position: 'absolute',
-            left: tag.x,
-            top: tag.y,
+            left: _percentToPx(tag.x, _imgWidth) + _imgOffset.left,
+            top: _percentToPx(tag.y, _imgHeight) + _imgOffset.top,
           })
           .html(
             _createCloseButton(tag.id, tag.character.name, tag.character_id)
@@ -53,6 +57,14 @@ WALDO.Main = (function() {
 
       _setUpListeners();
     });
+  }
+
+  var _pxToPercent = function(px, img) {
+    return px / img * 100;
+  }
+
+  var _percentToPx = function(pc, img) {
+    return pc / 100 * img;
   }
 
 
@@ -77,20 +89,11 @@ WALDO.Main = (function() {
     $('#img').on('mouseleave', function() {
       _$tags.fadeOut();
     })
-
   }
 
-  var _displayTags = function(e) {
-    // update tags first? use getTags?
-    e.stopImmediatePropagation();
-
-    _$tags.fadeToggle()
-
-  }
 
   var _listenForTagging = function() {
     $('img').on('click', function(e) {
-      console.log('image clicked');
       // get current x and y coordinates:
       var x = e.clientX;
       var y = e.clientY;
@@ -99,13 +102,11 @@ WALDO.Main = (function() {
   }
 
   var _toggleTagger = function(x, y) {
-    console.log('_toggleTagger');
     _$tagger.css({
       left: x - _$taggerFrame.width() / 2,
       top: y - _$taggerFrame.height() / 2
     });
 
-    console.log('tagger visibility', _taggerVisible);
     if (!_taggerVisible) {
       _$tagger.fadeIn();
       _listenForNameSelection();
@@ -142,8 +143,8 @@ WALDO.Main = (function() {
     var tagData = {
       tag: {
         character_id: $that.data('char-id'),
-        x: _$tagger.position().left,
-        y: _$tagger.position().top
+        x: _pxToPercent(_$tagger.position().left - _imgOffset.left, _imgWidth),
+        y: _pxToPercent(_$tagger.position().top - _imgOffset.top, _imgHeight)
       }
     }
 
